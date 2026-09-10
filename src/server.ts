@@ -12,7 +12,12 @@ import { Logger } from 'winston';
 import { appRoutes } from '@users/routes';
 import { createRabbitMQConnection } from '@users/queues/connection';
 import { Channel } from 'amqplib';
-import { consumeBuyerDirectMessage, consumeReviewFanoutMessages, consumeSeedGigDirectMessages, consumeSellerDirectMessage } from '@users/queues/user.consumer';
+import {
+  consumeBuyerDirectMessage,
+  consumeReviewFanoutMessages,
+  consumeSeedGigDirectMessages,
+  consumeSellerDirectMessage
+} from '@users/queues/user.consumer';
 
 const SERVER_PORT = config.SERVER_PORT;
 const log: Logger = winstonLogger(`${config.ELASTIC_SEARCH_URL}`, 'userServer', 'debug');
@@ -29,8 +34,7 @@ export const start = (app: Application): void => {
 
 const securityMiddleware = (app: Application): void => {
   app.set('trust-proxy', 1);
-  app.use(hpp());
-  app.use(helmet());
+
   app.use(
     cors({
       origin: `${config.API_GATEWAY_URL}`,
@@ -38,6 +42,10 @@ const securityMiddleware = (app: Application): void => {
       credentials: true
     })
   );
+
+  app.use(hpp());
+  app.use(helmet());
+
   app.use((req: Request, _res: Response, next: NextFunction) => {
     if (req.headers.authorization) {
       const token = req.headers.authorization.split(' ')[1];
