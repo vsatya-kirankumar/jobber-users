@@ -14,7 +14,7 @@ const currentUsername = async (req: Request, res: Response): Promise<void> => {
 };
 
 const username = async (req: Request, res: Response): Promise<void> => {
-  const buyer: IBuyerDocument | null = await getBuyerByUsername(req.params.username.toString());
+  const buyer: IBuyerDocument | null = await getBuyerByUsername(req.params.username as string);
   res.status(StatusCodes.OK).json({ message: 'Buyer profile', buyer });
 };
 
